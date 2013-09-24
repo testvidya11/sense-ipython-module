@@ -196,7 +196,7 @@ def get_workers():
     response = requests.get(url, auth=(auth["user"], auth["pass"])).json()
 
     def is_worker(dashboard):
-        return dashboard["status"] == "running" and (dashboard["id"] == master_id or dashboard["master_id"] == master_id)
+        return dashboard["status"] == "running" and dashboard["master_id"] == master_id)
 
     return filter(is_worker, response)
 
@@ -216,12 +216,12 @@ def stop_workers(*ids):
         A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
     """
     if len(ids) == 0:
-        ids_ = filter(lambda x: x["master_id"] is not None, get_workers())
-        stop_workers(*ids_)
+        ids = [worker["id"] for worker in get_workers()]
+        stop_workers(*ids)
     else:
         base_url = API_URL + "/users/" + \
             os.environ["SENSE_OWNER_ID"] + "/projects/" + \
-            os.environ["SENSE_PROJECT_ID"] + "/dashboards"
+            os.environ["SENSE_PROJECT_ID"] + "/dashboards/"
         request_body = {"status": "stopped"}
         auth = get_auth()
 
