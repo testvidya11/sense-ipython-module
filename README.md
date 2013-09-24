@@ -93,10 +93,10 @@ In IPython this could also be accomplished with IPython `!` shell command as
 
 You can use the following options to customize the installation:
 
-* *flags*: A list of strings to pass to pip as flags. For example, 
+* **flags**: A list of strings to pass to pip as flags. For example, 
   `["U", "use-mirrors"]` would translate to the command-line flags
   `-U --use-mirrors`.
-* *arguments*: A dict containing arguments to pass to pip. For example,
+* **arguments**: A dict containing arguments to pass to pip. For example,
   `{"d": "./downloads", "mirrors": "http://URL"}` would translate to
   the command-line arguments `-d ./downloads --mirrors=http://URL`.
 
@@ -105,13 +105,14 @@ You can use the following options to customize the installation:
 Gets the current dashboard's networking information.
 
 The `get_network()` function returns useful network information for the
-dashboard in the form of a dict with keys public_dns`,
+dashboard in the form of a dict with keys `public_dns`,
 `public_port_mapping`, `ssh_password` and `project_ip`. `public_port_mapping`
 is a dict whose  keys and values are integers.
 
 Every project has its own virtual private network.  The `project_ip` address
 is only accessible to other dashboards in the same project. Any port can be 
-accessed via this address.
+accessed via this address.  This makes it easy to use cluster computing frameworks
+such as MPI that don't have builtin security features.
 
 The `public`, `public_port_mapping` and `ssh_password` provide information on how
 the current dashboard can be contacted from outside the project. Only
@@ -122,7 +123,7 @@ outside the dashboard on the public DNS on port `public_port_mapping[3000]`.
 If required, you can ssh to dashboards using the public DNS on port
 `public_port_mapping[22]` and username `sense` and password give by `ssh_password`.
 
-### sense.launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={})
+### launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={})
     
 Launch a worker dashboard into the cluster.
 
@@ -134,16 +135,16 @@ on Sense.  You can launch dashboards into the current cluster using `launch_work
 
 The parameters of `launch_workers` are:
 
-* *n*: The number of workers to launch.
-* *size* (optional): The size of the workers, for example "small", "medium" or "large".
-* *engine* (optional): The name of the [npm](http://npmjs.org) module to use
+* **n**: The number of workers to launch.
+* **size** (optional): The size of the workers, for example "small", "medium" or "large".
+* **engine** (optional): The name of the [npm](http://npmjs.org) module to use
   as the engine. Defaults to "sense-ipython-engine", but workers can run other
   engines too.
-* *startup_script* (optional): A Python script file that the worker should
+* **startup_script** (optional): A Python script file that the worker should
   execute on launch. 
-* *startup_code* (optional): Python code that the worker should execute on 
+* **startup_code** (optional): Python code that the worker should execute on 
   launch. `startup_script` has precedence over `startup_code`.
-* *env* (optional): A map containing environment variables that should be
+* **env** (optional): A map containing environment variables that should be
   set on the workers. This is generally the preferred way to a master's contact
   information information to workers.
 
@@ -151,7 +152,7 @@ The return value is a list of dicts. Each dict describes one of the workers
 you just launched and contains keys such as `id`, `engine`, `status`, etc. 
 The full format is documented [here.](http://help.senseplatform.com/api/rest#retrieve-dashboard)
 
-### sense.list_workers()
+### list_workers()
 
 Get list of workers in cluster.
 
@@ -159,7 +160,7 @@ This function returns a list of dicts like those returned by `launch_workers()`.
 One dict is returned for each dashboard that either shares a master with the current
 dashboard.
 
-### sense.stop_workers(*ids)
+### stop_workers(*ids)
 
 Stop workers.
 
@@ -169,16 +170,15 @@ reduce the cluster to a single interactive master dashboard, you can
 simply call `stop_workers()`. The return value is the same kind of 
 object as that returned by `get_workers()` and `launch_workers()`.
 
-### sense.get_auth()
+### get_auth()
 
 Get authentication information for REST API.
 
-Sense has a powerful REST API that gives you complete programmatic control
-over virtually every aspect of Sense. Most REST calls require authentication.  
-The `get_auth()` function  returns the 
+Sense has a powerful REST API that gives you complete programmatic control over virtually 
+every aspect of Sense. Most REST calls require authentication.  The `get_auth()` function  returns the 
 [Basic Auth](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication)
 information as tuple. You can then supply this information your HTTP client of choice, such 
-as the  Python [requsts](http://docs.python-requests.org/) package to make authenticated REST API calls. 
+as the  Python [requests](http://docs.python-requests.org/) package to make authenticated REST API calls. 
 
 By default `get_auth()` uses `SENSE_API_TOKEN` for authentication. This
 token restricts access to the project the dashboard is executing in. For access across projects,
@@ -192,7 +192,8 @@ To better understand these options, read the
 import sense
 import requests
 auth = sense.get_auth()
-url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"]
+url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] +
+   "/projects/" + os.environ["SENSE_PROJECT_ID"]
 response = requests.get(url, auth=(auth["user"], auth["password"])).json()
 ```
 
@@ -211,12 +212,10 @@ in a dashboard.
 
 # Support
 
-* Email: support@senseplatform.com
-* Google Group: https://groups.google.com/forum/?fromgroups#!forum/sense-users
-* IRC: `#senseplatform` on `irc.freenode.net`
+* **Email**: support@senseplatform.com
+* **Google Group**: https://groups.google.com/forum/?fromgroups#!forum/sense-users
+* **IRC**: `#senseplatform` on `irc.freenode.net`
 
 # License
 
 MIT
-
-
