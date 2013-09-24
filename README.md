@@ -154,11 +154,17 @@ The full format is documented [here.](http://help.senseplatform.com/api/rest#ret
 
 ### list_workers()
 
-Get list of workers in cluster.
+Get information on the worker dashboards running in the current cluster.
 
-This function returns a list of dicts like those returned by `launch_workers()`. 
+Returns a list of dicts like those returned by `launch_workers()`. 
 One dict is returned for each dashboard that either shares a master with the current
 dashboard.
+
+### get_master()
+
+Get the master dashboard of the current cluster.
+
+Returns a dict like the ones returned by `launch_workers()`. 
 
 ### stop_workers(*ids)
 
