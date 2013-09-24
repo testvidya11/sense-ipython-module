@@ -128,12 +128,12 @@ in a dashboard.
 
 ### Using the REST API
 
-The Sense REST API lets you take a wide range of actions that aren't
-supported by this package. To use it, you'll first need to call
-`getAuth()` to get basic authentication information in a dict with
-keys 'user' and 'pass'. You can then  supply this information to the
-Python package `requests` to make REST API calls. For example, to
-find information about the current project, you could do
+The powerful Sense REST API gives you programmatic control over every 
+aspect of Sense. To use it, you'll first need to call `getAuth()` to 
+get basic authentication information in a dict with keys 'user' and 
+'pass'. You can then  supply this information to the Python package 
+`requests` to make REST API calls. For example, to find information 
+about the current project, you could do
 
 ```python
 import sense
