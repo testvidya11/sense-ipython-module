@@ -98,8 +98,7 @@ def networkInfo():
 
     Only ports that are keys of public_port_mapping can be accessed via 
     the public DNS. However, contacting dashboards via the public DNS 
-    gives better network performance than the project IP, and should be
-    preferred when possible.
+    gives better network performance than the project IP.
 
     If you run a service on port 3000, for example, it 
     can be accessed from outside the dashboard on the public DNS on port 
