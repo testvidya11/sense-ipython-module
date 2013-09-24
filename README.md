@@ -205,9 +205,8 @@ across all engines, and are documented [here](https://docs.senseplatform.com/get
 IPython provides its own [rich display system](http://nbviewer.ipython.org/urls/raw.github.com/ipython/ipython/1.x/examples/notebooks/Part%205%20-%20Rich%20Display%20System.ipynb), 
 so unlike its [R](http://github.com/SensePlatform/sense-r-module) 
 and [JavaScript](http://github.com/SensePlatform/sense-js-module) 
-counterparts this package does not provide any rich output functions.
-
-Just use IPython's rich display system to display HTML, images and more
+counterparts this package does not provide any rich output functions. Just use IPython's rich 
+display system to display HTML, images and more
 in a dashboard.
 
 # Support
