@@ -169,7 +169,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     # The n lanch requests are done concurrently in a thread pool for lower
     # latency.
     def launch_worker(i):
-        return requests.post(url, data=request_body, auth=(auth["user"], auth["pass"])).json()
+        return requests.post(url, data=request_body, auth=(auth["user"], auth["password"])).json()
     pool = futures.ThreadPoolExecutor(THREAD_POOL_SIZE)
     responses = [pool.submit(launch_worker, i) for i in xrange(n)]
     return map(lambda x: x.result(), futures.wait(responses)[0])
@@ -190,7 +190,7 @@ def get_workers():
     url = API_URL + "/users/" + \
         os.envron["SENSE_OWNER_ID"] + "/projects/" + \
         os.environ["SENSE_PROJECT_ID"] + "/dashboards"
-    response = requests.get(url, auth=(auth["user"], auth["pass"])).json()
+    response = requests.get(url, auth=(auth["user"], auth["password"])).json()
 
     def is_worker(dashboard):
         return dashboard["status"] == "running" and dashboard["master_id"] == master_id)
@@ -225,7 +225,7 @@ def stop_workers(*ids):
         # The stoprequests are done concurrently in a thread pool for lower
         # latency.
         def stop_worker(id):
-            return requests.patch(base_url + str(id), data=request_body, auth=(auth["user"], auth["pass"])).json()
+            return requests.patch(base_url + str(id), data=request_body, auth=(auth["user"], auth["password"])).json()
 
         pool = futures.ThreadPoolExecutor(THREAD_POOL_SIZE)
         responses = [pool.submit(stop_worker, id) for id in ids]
