@@ -14,9 +14,7 @@ import futures
 THREAD_POOL_SIZE = 10
 API_URL = os.environ["SENSE_API_URL"] or "https://api.senseplatform.com"
 
-__all__ = ["install", "network_info", "get_auth",
-           "network_info", "launch_workers", "get_workers", "stop_workers"]
-
+__all__ = ["install", "auth", "network", "launch_workers", "get_workers", "stop_workers"]
 
 def expand_cli_arguments(arg, value=None):
     if len(arg) == 1:
@@ -71,7 +69,6 @@ def install(package_name, flags=[], arguments={}):
 
 def get_auth():
     """Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`
-
     Returns
     -------
     dict
@@ -90,7 +87,7 @@ def get_auth():
             "Either set environment variable SENSE_API_TOKEN, or else SENSE_USERNAME and SENSE_PASSWORD")
 
 
-def network_info():
+def get_network():
     """Returns the current dashboard's networking information.
 
     Returns
@@ -169,7 +166,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
         os.environ["SENSE_PROJECT_ID"] + "/dashboards"
     auth = get_auth()
 
-    # The n launch requests are done concurrently in a thread pool for lower
+    # The n lanch requests are done concurrently in a thread pool for lower
     # latency.
     def launch_worker(i):
         return requests.post(url, data=request_body, auth=(auth["user"], auth["pass"])).json()
@@ -191,7 +188,7 @@ def get_workers():
 
     auth = get_auth()
     url = API_URL + "/users/" + \
-        os.environ["SENSE_OWNER_ID"] + "/projects/" + \
+        os.envron["SENSE_OWNER_ID"] + "/projects/" + \
         os.environ["SENSE_PROJECT_ID"] + "/dashboards"
     response = requests.get(url, auth=(auth["user"], auth["pass"])).json()
 
@@ -225,7 +222,7 @@ def stop_workers(*ids):
         request_body = {"status": "stopped"}
         auth = get_auth()
 
-        # The stop requests are done concurrently in a thread pool for lower
+        # The stoprequests are done concurrently in a thread pool for lower
         # latency.
         def stop_worker(id):
             return requests.patch(base_url + str(id), data=request_body, auth=(auth["user"], auth["pass"])).json()
