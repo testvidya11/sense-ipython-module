@@ -8,7 +8,6 @@
 
 import os
 import IPython
-import simplejson
 import requests
 import futures
 threadPoolSize=10
