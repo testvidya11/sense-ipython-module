@@ -10,27 +10,28 @@ import os
 import IPython
 import requests
 import futures
-threadPoolSize=10
+thread_pool_size=10
+API_URL = "https://api.senseplatform.com" or os.environ["SENSE_API_URL"]
 
-__all__ = ["install", "networkInfo", "getAuth", "networkInfo", "launchWorkers", "getWorkers", "stopWorkers"]
+__all__ = ["install", "network_info", "get_auth", "network_info", "launch_workers", "get_workers", "stop_workers"]
 
-def expandCliArgument(arg, value=None):
+def expand_cli_arguments(arg, value=None):
     if len(arg) == 1:
-        dashedArg = "-" + arg
+        dashed_args = "-" + arg
         if value is not None:
-          return dashedArg + " " + value
+          return dashed_args + " " + value
     else:
-        dashedArg = "--" + arg
+        dashed_args = "--" + arg
         if value is not None:
-          return dashedArg + "=" + value
-    return dashedArg
+          return dashed_args + "=" + value
+    return dashed_args
 
-def install(packageName, flags=[], arguments={}):
+def install(package_name, flags=[], arguments={}):
     """Installs the named package to the current project using `pip. <http://www.pip-installer.org/>`
     
     Parameters
     ----------
-    packageName: str 
+    package_name: str 
         The name of the `Python package <https://pypi.python.org/pypi>` to install.
     flags: list, optional 
         Command line flags for pip.
@@ -57,11 +58,11 @@ def install(packageName, flags=[], arguments={}):
     
     >>> -d ./downloads --mirrors=http://URL
     """
-    flagString = " ".join([expandCliArgument(v) for v in flags])
-    argString = " ".join([expandCliArgument(k,v) for k,v in arguments.iteritems()])
-    os.system("pip install %s --user"%packageName + " " + flagString + " " + argString)
+    flag_string = " ".join([expand_cli_arguments(v) for v in flags])
+    arg_string = " ".join([expand_cli_arguments(k,v) for k,v in arguments.iteritems()])
+    os.system("pip install %s --user"%package_name + " " + flag_string + " " + arg_string)
     
-def getAuth():
+def get_auth():
     """Returns the username and password to use with the `Sense REST API. <https://docs.senseplatform.com/api/rest>`
 
     Returns
@@ -80,7 +81,7 @@ def getAuth():
     else:
         raise RuntimeError("Either set environment variable SENSE_API_TOKEN, or else SENSE_USERNAME and SENSE_PASSWORD")
 
-def networkInfo():
+def network_info():
     """Returns the current dashboard's networking information.
 
     Returns
@@ -107,20 +108,20 @@ def networkInfo():
     The dashboard's SSH daemon is listening on the public DNS on port
     ``public_port_mapping[22]``, and will accept the SSH password. 
     """
-    portMapping = {}
+    port_mapping = {}
     i = 1
     while ("SENSE_PORT" + str(i)) in os.environ:
-        portMapping[int(os.environ["SENSE_PORT" + str(i)])] = int(os.environ["SENSE_PORT" + str(i) + "_PUBLIC"])
+        port_mapping[int(os.environ["SENSE_PORT" + str(i)])] = int(os.environ["SENSE_PORT" + str(i) + "_PUBLIC"])
         i = i + 1
-    portMapping["22"] = os.environ["SENSE_SSH_PORT_PUBLIC"]
+    port_mapping["22"] = os.environ["SENSE_SSH_PORT_PUBLIC"]
     return {
             "public_dns": os.environ["SENSE_DNS_PUBLIC"],
-            "public_port_mapping": portMapping,
+            "public_port_mapping": port_mapping,
             "ssh_password": os.environ["SENSE_SSH_PASSWORD"],
             "project_ip": os.environ["SENSE_PROJECT_IP"]
            }
 
-def launchWorkers(n, size, engine="sense-ipython-engine", startupScript="", startupCode="", env={}):
+def launch_workers(n, size, engine="sense-ipython-engine", startup_script="", startup_code="", env={}):
     """Launches worker dashboards.
     
     Parameters
@@ -131,10 +132,10 @@ def launchWorkers(n, size, engine="sense-ipython-engine", startupScript="", star
         The dashboard size, for example "small", "medium" or "large".
     engine: str, optional 
         The name of the `npm <http://npmjs.org>` module to use as the engine.
-    startupScript: str, optional 
+    startup_script: str, optional 
         The name of a Python source file the dashboard should execute as soon as it starts up.
-    startupCode: str, optional 
-        Python code the dashboard should execute as soon as it starts up. Don't provide both startupScript and startupCode.
+    startup_code: str, optional 
+        Python code the dashboard should execute as soon as it starts up. Don't provide both startup_script and startup_code.
     env: dict, optional 
         Environment variables to set in the dashboard.
 
@@ -145,31 +146,31 @@ def launchWorkers(n, size, engine="sense-ipython-engine", startupScript="", star
     """
 
     if os.environ["SENSE_MASTER_ID"] != "":
-        raise RuntimeError("launchWorkers should only be called from master dashboards.")
+        raise RuntimeError("launch_workers should only be called from master dashboards.")
 
-    requestBody = {
+    request_body = {
         "name": "Worker for IPython dashboard" + os.environ["SENSE_DASHBOARD_ID"],
         "engine": engine,
         "size": size,
-        "startupScript": startupScript,
-        "startupCode": startupCode,
+        "startup_script": startup_script,
+        "startup_code": startup_code,
         "env": env,
         "master_id": os.environ["SENSE_DASHBOARD_ID"]
     }
-    url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards"
-    auth = getAuth()
+    url = API_URL + "/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards"
+    auth = get_auth()
     
     # The n launch requests are done concurrently in a thread pool for lower
     # latency.
-    def launchWorker(i):
-        return requests.post(url, data=requestBody, auth=(auth["user"], auth["pass"])).json()
-    pool = futures.ThreadPoolExecutor(threadPoolSize)
-    responses = [pool.submit(launchWorker, i) for i in xrange(n)]
+    def launch_worker(i):
+        return requests.post(url, data=request_body, auth=(auth["user"], auth["pass"])).json()
+    pool = futures.ThreadPoolExecutor(thread_pool_size)
+    responses = [pool.submit(launch_worker, i) for i in xrange(n)]
     return map(lambda x: x.result(), futures.wait(responses)[0])
 
-def getWorkers():
-    """Returns information on all the workers that share a master with the
-    current dashboard, as well as the master.
+def get_workers():
+    """
+    Get current dashboard, as well as the master.
 
     Returns
     -------
@@ -177,21 +178,21 @@ def getWorkers():
         A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
     """
     if os.environ["SENSE_MASTER_ID"] == "":
-        masterId = os.environ["SENSE_DASHBOARD_ID"]
+        master_id = os.environ["SENSE_DASHBOARD_ID"]
     else:
-        masterId = os.environ["SENSE_MASTER_ID"]
+        master_id = os.environ["SENSE_MASTER_ID"]
     
-    masterId = int(masterId)
-    auth = getAuth()
-    url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards/"
+    master_id = int(master_id)
+    auth = get_auth()
+    url = API_URL + "/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards"
     response = requests.get(url, auth=(auth["user"], auth["pass"])).json()
     
-    def isWorker(dashboard):
-        return dashboard["status"] == "running" and (dashboard["id"] == masterId or dashboard["master_id"] == masterId)
+    def is_worker(dashboard):
+        return dashboard["status"] == "running" and (dashboard["id"] == master_id or dashboard["master_id"] == master_id)
     
-    return filter(isWorker, response)    
+    return filter(is_worker, response)    
 
-def stopWorkers(*ids):
+def stop_workers(*ids):
     """Stops the given dashboards.
 
     Parameters
@@ -207,18 +208,17 @@ def stopWorkers(*ids):
         A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
     """
     if len(ids) == 0:
-        ids_ = filter(lambda x: x["master_id"] is not None, getWorkers())
-        ids_ = map(lambda x: x["id"], ids_)
-        stopWorkers(*ids_)
+        ids_ = filter(lambda x: x["master_id"] is not None, get_workers())
+        stop_workers(*ids_)
     else:
-        baseUrl = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards/";
-        requestBody = {"status": "stopped"}
-        auth = getAuth()
+        base_url = API_URL + "/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards";
+        request_body = {"status": "stopped"}
+        auth = get_auth()
         
         # The stop requests are done concurrently in a thread pool for lower latency.
-        def stopWorker(id):
-            return requests.patch(baseUrl + str(id), data=requestBody, auth=(auth["user"], auth["pass"])).json()
+        def stop_worker(id):
+            return requests.patch(base_url + str(id), data=request_body, auth=(auth["user"], auth["pass"])).json()
 
-        pool = futures.ThreadPoolExecutor(threadPoolSize)
-        responses = [pool.submit(stopWorker, id) for id in ids]
+        pool = futures.ThreadPoolExecutor(thread_pool_size)
+        responses = [pool.submit(stop_worker, id) for id in ids]
         return map(lambda x: x.result(), futures.wait(responses)[0])
