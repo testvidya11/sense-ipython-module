@@ -1,4 +1,4 @@
-# Utilies for [IPython](http://ipython.org) on [Sense.](https://www.senseplatform.com)
+# Utilies for [IPython](http://ipython.org) on [Sense](https://www.senseplatform.com)
 
 [![Build Status](https://travis-ci.org/SensePlatform/sense-ipython-module.png)](https://travis-ci.org/SensePlatform/sense-ipython-module)
 
@@ -81,15 +81,15 @@ for i in range(0, 3)
 sense.stop_workers()
 ```
 
-# API
+## API
 
-### `install(package_name, flags=[], arguments={}):`
+### install
 
 Installs the named package to the project with [pip](http://www.pip-installer.org) 
-using the [user scheme](http://docs.python.org/2/install/index.html#alternate-installation-the-user-scheme). For example:
+using the [user scheme](http://docs.python.org/2/install/index.html#alternate-installation-the-user-scheme). Usage: 
 
-```
-sense.install("pyzmq")
+```python
+install(package_name, flags=[], arguments={})
 ```
 
 If you prefer, you can do the same by running a shell command from IPython using the `!` prefix:
@@ -109,42 +109,50 @@ You can use the following options to customize the installation:
 
 Any of the project's dashboards can import the package.
 
-### `network_info()`
-
-<!-- Gets the current dashboard's networking information. -->
+### network_info
 
 Returns the current dashboard's contact information 
 in a dict with keys `public_dns`, `public_port_mapping`, `ssh_password` and 
-`project_ip`. `public_port_mapping` is a dict whose  keys and values are integers.
+`project_ip`. The public port mapping is a dict whose  keys and values are integers. Usage: 
+
+```python
+network_info()
+```
+
 
 Every project has its own [virtual private network](http://en.wikipedia.org/wiki/Virtual_private_network). 
-The `project_ip` address is on the project VPN and so is only accessible to 
+The project IP address is on the project VPN and is only accessible to 
 other dashboards in the same project. The project VPN makes it possible to 
 use cluster computing frameworks that don't have built-in security features, 
 such as [MPI](http://en.wikipedia.org/wiki/Message_Passing_Interface). It also
 makes it possible to run services in dashboards on their default ports, as
-any port can be accessed via the `project_ip`.
+any port can be accessed via the project IP.
 
-The `public_dns`, `public_port_mapping` and 
-`ssh_password` describe how the current dashboard can be contacted 
-from outside the project. Only ports that are keys of `public_port_mapping` 
-can be accessed via the public dns address.  If you run a service on port 
-3000, for example, it  can be accessed from anywhere on the internet on the public DNS hostname on port `public_port_mapping[3000]`.
+The public DNS hostname, public port mapping and SSH password describe how 
+the current dashboard can be contacted from outside the project. Only ports 
+that are keys of the public port mapping can be accessed via the public DNS 
+hostname.  If you run a service on port 3000, for example, it  can be accessed 
+from anywhere on the internet on the public DNS hostname on port 
+`public_port_mapping[3000]`.
 
-If required, you can ssh to dashboards using the public DNS on port
-`public_port_mapping[22]` with username `sense` and password given by `ssh_password`.
+If required, you can ssh to dashboards using the public DNS hostname on port
+`public_port_mapping[22]` with username 'sense' and the SSH password.
 
-### `launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={})`
-    
-Launches worker dashboards into the cluster.
+### launch_workers
+
+Launches worker dashboards into the cluster. Usage: 
+
+```python
+launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={})
+```    
 
 In Sense, a cluster is a group of dashboards with the same master dashboard.  
 Worker dashboards multiplex their outputs to the master and are cleaned up
 automatically when the master is stopped or fails.  These features
 make it much easier to manage, monitor and debug distributed applications
-on Sense. You can launch dashboards into the cluster using `launch_workers`.
+on Sense.
 
-The parameters of `launch_workers` are:
+The parameters are:
 
 * **n**: The number of workers to launch.
 * **size** (optional): The size of the workers, for example "small", "medium" or "large".
@@ -154,7 +162,7 @@ The parameters of `launch_workers` are:
 * **startup_script** (optional): A Python script file that the worker should
   execute on launch. The path is relative to the project's home folder.
 * **startup_code** (optional): Python code that the worker should execute on 
-  launch. `startup_script` has precedence over `startup_code`.
+  launch. If both are provided, startup_script has precedence over startup_code.
 * **env** (optional): A map containing environment variables that should be
   set on the workers before any code is executed. This is the preferred way 
   to send a master's contact information information to workers.
@@ -163,40 +171,57 @@ The return value is a list of dicts. Each dict describes one of the workers
 that was launched and contains keys such as `id`, `engine`, `status`, etc. 
 The full format is documented [here.](http://help.senseplatform.com/api/rest#retrieve-dashboard)
 
-### `list_workers()`
+### list_workers
+
+Usage: 
+
+```python
+list_workers()
+```
 
 Returns information on the worker dashboards in the cluster in a 
-list of dicts like those returned by `launch_workers()`.
+list of dicts like those returned by launch_workers.
 
-### get_master()
+### get_master
 
-Returns information on the cluster's master dashboard in a dict like the ones returned by `launch_workers()`. 
+Returns information on the cluster's master dashboard in a dict like the ones returned by launch_workers. Usage: 
 
-### `stop_workers(*ids)`
+```python
+get_master()
+```
 
-Stop worker dashboards.
+### stop_workers
 
-To stop specific workers, call `stop_workers(id1, id2, ...)`. `id` is one of 
-the keys of the dicts returned by `list_workers` and `launch_workers`.
+Stops worker dashboards. Usage: 
 
-To stop all workers in the cluster and reduce the cluster to a single 
-interactive master dashboard, simply call `stop_workers()`. The 
-return value is the same kind of object as that returned by `get_workers()` 
-and `launch_workers()`.
+```python
+# To stop specific workers:
+stop_workers(id1, id2, ...)
 
-### `get_auth()`
+# To stop all workers in the cluster:
+stop_workers()
+```
 
-Returns authentication information for the REST API.
+Dashboards' numerical IDs are available at key `"id"` in the dicts returned by 
+list_workers and launch_workers. The return value is a dict of the same type.
 
-Sense has a powerful [REST API](https://help.senseplatform.com/api/rest) that gives you complete programmatic 
+### get_auth
+
+Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest). Usage: 
+
+```python
+get_auth()
+```
+
+Sense has a powerful REST API that gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
-[Basic Auth](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication). 
-The `get_auth()` function  returns the basic auth information as a dict 
+[Basic Authentication](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication).
+The get_auth() function  returns the basic auth information as a dict 
 with keys `"user"` and `"password"`. To make authenticated REST calls, supply 
 this information your HTTP client of choice, such as the 
 Python [requests](http://docs.python-requests.org/) package. 
 
-By default `get_auth()` uses the environment variable `SENSE_API_TOKEN` for
+By default get_auth uses the environment variable `SENSE_API_TOKEN` for
 authentication. This token restricts access to the current project 
 executing in. For access across projects, you can pass in credentials manually 
 or set `SENSE_USERNAME` and `SENSE_PASSWORD` in the environment. To better 
