@@ -3,7 +3,7 @@
    :platform: Ubuntu
    :synopsis: Utilities for IPython on `Sense <https://senseplatform.com>`.
 
-.. moduleauthor:: Anand Patil <anand@senseplatform.com>
+.. moduleauthor:: Sense <support@senseplatform.com>
 """
 
 import os
