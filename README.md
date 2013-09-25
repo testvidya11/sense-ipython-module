@@ -236,8 +236,7 @@ the information returned by get_auth your HTTP client of choice, such as the
 Python [requests](http://docs.python-requests.org/) package. 
 
 By default get_auth uses the environment variable SENSE_API_TOKEN for
-authentication. This token restricts access to the current project 
-executing in. For access across projects, you can pass in credentials manually 
+authentication. This token restricts access to the current project. For access across projects, you can pass in credentials manually 
 or set SENSE_USERNAME and SENSE_PASSWORD in the environment. To better 
 understand these options, read the [Understanding Project Security](http://help.senseplatform.com/understanding-project-security)
 documentation.
