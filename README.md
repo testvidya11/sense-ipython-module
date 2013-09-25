@@ -1,23 +1,31 @@
-# Utilities for [IPython](http://ipython.org) on [Sense](https://www.senseplatform.com)
+# Utilities for [IPython](http://ipython.org) on [Sense](https://senseplatform.com)
 
 [![Build Status](https://travis-ci.org/SensePlatform/sense-ipython-module.png)](https://travis-ci.org/SensePlatform/sense-ipython-module)
 
 This package complements Sense's [REST API](https://help.senseplatform.com/api/rest)
-by wrapping and simplifying some of the most common operations, such as launching and stopping worker dashboards. Its primary purpose is to support other packages that implement higher-level approaches to cluster computing.
+by wrapping and simplifying some of the most common operations, such as launching and 
+stopping worker dashboards. Its primary purpose is to support other packages that implement 
+higher-level approaches to cluster computing.
 
 ## Installation
 
-This package is preinstalled on Sense. To install it elsewhere use
+This package is preinstalled on Sense. You can import it with
 
 ```
-python setup.py install
+import sense
+```
+
+To install it elsewhere use
+
+```
+pip install sense
 ```
 
 ## Example
 
 This example launches several worker dashboards and communicates with them 
 using [ZeroMQ](https://learning-0mq-with-pyzmq.readthedocs.org/en/latest/)
-over the project's secure virtual private network.
+over the project's private network.
 
 
 ```python
@@ -32,14 +40,14 @@ import zmq
 context = zmq.Context()
 socket = context.socket(zmq.REP)
 
-# Use 'get_network_info' to find out the IP address of the current
+# Use 'get_network_info' to find out the private IP address of the current
 # dashboard in the project's virtual private network.
 address = "tcp://" + sense.network_info().project_ip + ":5000"
 socket.bind(address)
 
-# This code will be sent to the worker dashboards to execute on startup.
-# Each worker will attempt to connect to the ZeroMQ server whose IP
-# address is stored in its 'SERVER' environment variable, then will send
+# Define code the worker dashboards should execute on startup.
+# Each worker will attempt to connect to the ZeroMQ server whose 
+# address is stored in its 'SERVER' environment variable and then will send
 # a message to the server.
 worker_code = """
 import os
@@ -86,7 +94,7 @@ sense.stop_workers()
 
 ### install
 
-Installs the named package to the project with [pip](http://www.pip-installer.org) 
+Installs a Python package to the project with [pip](http://www.pip-installer.org) 
 using the [user scheme](http://docs.python.org/2/install/index.html#alternate-installation-the-user-scheme). 
 
 ```python
@@ -95,13 +103,13 @@ sense.install(package_name, flags=[], arguments={})
 ```
 
 If you prefer, you can also install packages by running a shell command from 
-IPython using the `!` prefix:
+IPython using the ! prefix:
 
 ```
 !pip install pyzmq --user
 ```
 
-You can use the following options to customize the installation:
+Options:
 
 * **flags**: A list of strings to pass to pip as flags. For example, 
   `["U", "use-mirrors"]` would translate to the command-line flags
@@ -110,7 +118,7 @@ You can use the following options to customize the installation:
   `{"d": "./downloads", "mirrors": "http://URL"}` would translate to
   the command-line arguments `-d ./downloads --mirrors=http://URL`.
 
-Any of the project's dashboards can import the package.
+Once installed, any of the project's dashboards can import the package.
 
 ### network_info
 
@@ -119,16 +127,14 @@ in a dict with keys `public_dns`, `public_port_mapping`, `ssh_password` and
 `project_ip`.
 
 ```python
-import sense
-network_contact_info = sense.network_info()
+network_info = sense.network_info()
 ```
 
 Every project has its own [virtual private network](http://en.wikipedia.org/wiki/Virtual_private_network) (VPN). 
-The project IP address is on the project VPN and is only accessible to 
-other dashboards in the same project. The project VPN makes it possible to 
+The project IP address is bound to the project VPN and is only accessible to 
+other dashboards in the same project. The project VPN makes it easy to 
 use cluster computing frameworks that lack built-in security features, 
-such as [MPI](http://en.wikipedia.org/wiki/Message_Passing_Interface). It also
-makes it possible to run services on their default ports, as any port can be accessed via the project IP.
+such as [MPI](http://en.wikipedia.org/wiki/Message_Passing_Interface).
 
 The public DNS hostname, public port mapping and SSH password describe how 
 the current dashboard can be contacted from outside the project. The public 
@@ -146,8 +152,7 @@ If required, you can SSH to dashboards using the public DNS hostname and port
 Launches worker dashboards into the cluster. 
 
 ```python
-import sense
-worker_info = sense.launch_workers(n, 
+ worker_info = sense.launch_workers(n, 
     size="small", 
     engine="sense-ipython-engine", 
     startup_script="", 
@@ -158,7 +163,7 @@ worker_info = sense.launch_workers(n,
 In Sense, a cluster is a group of dashboards with the same master dashboard.  
 Worker dashboards multiplex their outputs to the master and are cleaned up
 automatically when the master is stopped or fails.  These features
-make it much easier to manage, monitor and debug distributed applications
+make it easy to manage, monitor and debug distributed applications
 on Sense.
 
 The parameters are:
@@ -177,7 +182,7 @@ The parameters are:
   to send a master's contact information information to workers.
 
 The return value is a list of dicts. Each dict describes one of the workers
-that was launched and contains keys such as "id", "engine", "status", etc. 
+that was launched and contains keys such as `id`, `engine`, `status`, etc. 
 The full format is documented [here.](http://help.senseplatform.com/api/rest#retrieve-dashboard)
 
 ### list_workers
@@ -186,7 +191,6 @@ Returns information on the worker dashboards in the cluster in a
 list of dicts like those returned by launch_workers.
 
 ```python
-import sense
 worker_info = sense.list_workers()
 ```
 
@@ -195,7 +199,6 @@ worker_info = sense.list_workers()
 Returns information on the cluster's master dashboard in a dict like the ones returned by launch_workers.
 
 ```python
-import sense
 master_info = sense.get_master()
 ```
 
@@ -203,7 +206,7 @@ master_info = sense.get_master()
 
 Stops worker dashboards.
 
-Dashboards' numerical IDs are available at key "id" in the dicts returned by 
+Dashboards' numerical IDs are available at key `id` in the dicts returned by 
 list_workers and launch_workers. The return value is a dict of the same type.
 
 ```python
@@ -221,11 +224,6 @@ worker_info = sense.stop_workers()
 Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest)
 as a dict with keys "user" and "password".
 
-```python
-import sense
-basic_auth_credentials = sense.get_auth()
-```
-
 Sense's powerful REST API gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
 [Basic Authentication](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication).
@@ -237,10 +235,10 @@ By default get_auth uses the environment variable SENSE_API_TOKEN for
 authentication. This token restricts access to the current project 
 executing in. For access across projects, you can pass in credentials manually 
 or set SENSE_USERNAME and SENSE_PASSWORD in the environment. To better 
-understand these options, read the [Project Security](http://help.senseplatform.com/security) 
+understand these options, read the [Understanding Project Security](http://help.senseplatform.com/understanding-project-security)
 documentation.
 
-#### REST Example
+#### Authenticated REST Example
 
 This example retrieves information about the current project:
 
@@ -266,7 +264,9 @@ Use IPython's rich display system to display HTML, images and more in a dashboar
 
 # Support
 
+* **Documentation**: http://help.senseplatform.com
 * **Email**: support@senseplatform.com
+* **Twitter**: https://twitter.com/senseplatform
 * **Google Group**: https://groups.google.com/forum/?fromgroups#!forum/sense-users
 * **IRC**: `#senseplatform` on `irc.freenode.net`
 
