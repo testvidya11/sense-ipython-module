@@ -1,5 +1,4 @@
-# Utilies for [IPython](http://ipython.org) 
-on [Sense.](https://www.senseplatform.com)
+# Utilies for [IPython](http://ipython.org) on [Sense.](https://www.senseplatform.com)
 
 [![Build Status](https://travis-ci.org/SensePlatform/sense-ipython-module.png)](https://travis-ci.org/SensePlatform/sense-ipython-module)
 
