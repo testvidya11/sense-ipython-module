@@ -131,7 +131,7 @@ import sense
 network_info = sense.network_info()
 ```
 
-Every project has its own [virtual private network](http://en.wikipedia.org/wiki/Virtual_private_network) (VPN). 
+Every project has its own [virtual private network (VPN).](http://en.wikipedia.org/wiki/Virtual_private_network)
 The project IP address is bound to the project VPN and is only accessible to 
 other dashboards in the same project. The project VPN makes it easy to 
 use cluster computing frameworks that lack built-in security features, 
@@ -175,16 +175,16 @@ The parameters are:
 * **engine** (optional): The name of the [npm](http://npmjs.org) module to use
   as the engine. Defaults to "sense-ipython-engine", but workers can run other
   engines too.
-* **startup_script** (optional): A Python script file that the worker should
+* **startup_script** (optional): A script file that the worker should
   execute on launch. The path is relative to the project's home folder.
-* **startup_code** (optional): Python code that the worker should execute on 
+* **startup_code** (optional): Code that the worker should execute on 
   launch. If both are provided, startup_script has precedence over startup_code.
-* **env** (optional): A map containing environment variables that should be
+* **env** (optional): A dict containing environment variables that should be
   set on the workers before any code is executed. This is the preferred way 
   to send a master's contact information information to workers.
 
 The return value is a list of dicts. Each dict describes one of the workers
-that was launched and contains keys such as `id`, `engine`, `status`, etc. 
+that was launched and contains keys such as `"id"`, `"engine"`, `"status"`, etc. 
 The full format is documented [here.](http://help.senseplatform.com/api/rest#retrieve-dashboard)
 
 ### list_workers
@@ -226,7 +226,7 @@ worker_info = sense.stop_workers()
 ### get_auth
 
 Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest)
-as a dict with keys `user` and `password`.
+as a dict with keys `"user"` and `"password"`.
 
 Sense's REST API gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
