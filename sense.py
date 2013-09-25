@@ -11,7 +11,8 @@ import IPython
 import requests
 import futures
 
-__all__ = ["install", "network_info", "get_auth", "launch_worker", "list_workers", "get_master", "stop_workers"]
+__all__ = ["install", "network_info", "get_auth",
+           "launch_worker", "list_workers", "get_master", "stop_workers"]
 
 
 THREAD_POOL_SIZE = 10
@@ -63,11 +64,12 @@ def install(package_name, flags=[], arguments={}):
     >>> -d ./downloads --mirrors=http://URL
     """
     flag_string = " ".join([expand_cli_argument(v) for v in flags])
-    arg_string = " ".join([expand_cli_argument(k,v) 
-                            for k,v in arguments.iteritems()])
-    os.system("pip install %s --user" % 
-        package_name + " " + flag_string + " " + arg_string)
-    
+    arg_string = " ".join([expand_cli_argument(k, v)
+                           for k, v in arguments.iteritems()])
+    os.system("pip install %s --user" %
+              package_name + " " + flag_string + " " + arg_string)
+
+
 def get_auth():
     """Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`
 
@@ -87,6 +89,7 @@ def get_auth():
     else:
         raise RuntimeError(
             "Either set environment variable SENSE_API_TOKEN, or else SENSE_USERNAME and SENSE_PASSWORD")
+
 
 def network_info():
     """Returns the current dashboard's networking information.
@@ -118,15 +121,17 @@ def network_info():
     port_mapping = {}
     i = 1
     while ("SENSE_PORT" + str(i)) in os.environ:
-        port_mapping[int(os.environ["SENSE_PORT" + str(i)])] = int(os.environ["SENSE_PUBLIC_PORT" + str(i)])
+        port_mapping[int(os.environ["SENSE_PORT" + str(i)])] = int(
+            os.environ["SENSE_PUBLIC_PORT" + str(i)])
         i = i + 1
     port_mapping["22"] = os.environ["SENSE_PUBLIC_SSH_PORT"]
     return {
-            "public_dns": os.environ["SENSE_PUBLIC_DNS"],
-            "public_port_mapping": port_mapping,
-            "ssh_password": os.environ["SENSE_SSH_PASSWORD"],
-            "project_ip": os.environ["SENSE_PROJECT_IP"]
-           }
+        "public_dns": os.environ["SENSE_PUBLIC_DNS"],
+        "public_port_mapping": port_mapping,
+        "ssh_password": os.environ["SENSE_SSH_PASSWORD"],
+        "project_ip": os.environ["SENSE_PROJECT_IP"]
+    }
+
 
 def get_master_id():
     if os.environ["SENSE_MASTER_ID"] == "":
@@ -135,8 +140,10 @@ def get_master_id():
         master_id = os.environ["SENSE_MASTER_ID"]
     return int(master_id)
 
+
 def get_base_url():
     return API_URL + "/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards/"
+
 
 def launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={}):
     """Launches worker dashboards into the current cluster.
@@ -171,7 +178,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     }
     url = get_base_url()
     auth = get_auth()
-    
+
     # The n launch requests are done concurrently in a thread pool for lower
     # latency.
     def launch_worker(i):
@@ -179,6 +186,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     pool = futures.ThreadPoolExecutor(THREAD_POOL_SIZE)
     responses = [pool.submit(launch_worker, i) for i in xrange(n)]
     return map(lambda x: x.result(), futures.wait(responses)[0])
+
 
 def list_workers():
     """Returns all information on all the workers in the current cluster.
@@ -192,11 +200,12 @@ def list_workers():
     auth = get_auth()
     url = get_base_url()
     response = requests.get(url, auth=(auth["user"], auth["password"])).json()
-    
+
     def is_worker(dashboard):
         return dashboard["status"] == "running" and dashboard["master_id"] == master_id
-    
+
     return filter(is_worker, response)
+
 
 def get_master():
     """Returns information on the current dashboard's master.
@@ -210,7 +219,8 @@ def get_master():
     auth = get_auth()
     url = get_base_url() + master_id
     return requests.get(url, auth=(auth["user"], auth["password"])).json()
-    
+
+
 def stop_worker(*ids):
     """Stops worker dashboards in the current cluster.
 
@@ -229,11 +239,11 @@ def stop_worker(*ids):
         ids = [worker["id"] for worker in list_workers()]
         stop_workers(*ids)
     else:
-        base_url = get_base_url();
+        base_url = get_base_url()
         request_body = {"status": "stopped"}
         auth = get_auth()
-        
-        # The stop requests are done concurrently in a thread pool for 
+
+        # The stop requests are done concurrently in a thread pool for
         # lower latency.
         def stop_worker(id):
             return requests.patch(base_url + str(id), data=request_body, auth=(auth["user"], auth["password"])).json()
