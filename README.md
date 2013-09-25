@@ -78,6 +78,7 @@ for i in range(0, 3)
     time.sleep (1)  
     socket.send("I agree.")
 
+sense.stop_workers()
 ```
 
 # API
