@@ -80,10 +80,10 @@ def get_auth():
     need to set either SENSE_API_TOKEN or SENSE_USERNAME and SENSE_PASSWORD
     in the environment.
     """
-    if "SENSE_API_TOKEN" in os.environ:
-        return {"user": os.environ["SENSE_API_TOKEN"], "password": ""}
-    elif ("SENSE_USERNAME" in os.environ) and ("SENSE_PASSWORD" in os.environ):
+    if ("SENSE_USERNAME" in os.environ) and ("SENSE_PASSWORD" in os.environ):
         return {"user": os.environ["SENSE_USERNAME"], "password": os.environ["SENSE_PASSWORD"]}network_info
+    elif "SENSE_API_TOKEN" in os.environ:
+        return {"user": os.environ["SENSE_API_TOKEN"], "password": ""}
     else:
         raise RuntimeError(
             "Either set environment variable SENSE_API_TOKEN, or else SENSE_USERNAME and SENSE_PASSWORD")
