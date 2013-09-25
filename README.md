@@ -222,9 +222,9 @@ worker_info = sense.stop_workers()
 ### get_auth
 
 Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest)
-as a dict with keys "user" and "password".
+as a dict with keys `user` and `password`.
 
-Sense's powerful REST API gives you complete programmatic 
+Sense's REST API gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
 [Basic Authentication](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication).
  To make authenticated REST calls, supply 
