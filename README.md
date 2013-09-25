@@ -66,9 +66,10 @@ print "Received reply: ", message
 # code is sent to each, and the current dashboard's project IP address is
 # stored in each worker's environment as 'SERVER', so each worker will contact
 # the current dashboard.
-workers = sense.launch_workers(n=3, size="small", 
-                                startup_code=worker_code, 
-                                env={"SERVER": address})
+workers = sense.launch_workers(n=3, 
+    size="small", 
+    startup_code=worker_code, 
+    env={"SERVER": address})
 
 # Listen for worker messages.
 for i in range(0, 3)
@@ -85,14 +86,16 @@ sense.stop_workers()
 
 ### install
 
-Installs the named package to the project with [pip](http://www.pip-installer.org) 
-using the [user scheme](http://docs.python.org/2/install/index.html#alternate-installation-the-user-scheme). Usage: 
-
 ```python
-install(package_name, flags=[], arguments={})
+import sense
+sense.install(package_name, flags=[], arguments={})
 ```
 
-If you prefer, you can do the same by running a shell command from IPython using the `!` prefix:
+Installs the named package to the project with [pip](http://www.pip-installer.org) 
+using the [user scheme](http://docs.python.org/2/install/index.html#alternate-installation-the-user-scheme). 
+
+If you prefer, you can also install packages by running a shell command from 
+IPython using the `!` prefix:
 
 ```
 !pip install pyzmq --user
@@ -111,14 +114,14 @@ Any of the project's dashboards can import the package.
 
 ### network_info
 
-Returns the current dashboard's contact information 
-in a dict with keys `public_dns`, `public_port_mapping`, `ssh_password` and 
-`project_ip`. The public port mapping is a dict whose  keys and values are integers. Usage: 
-
 ```python
-network_info()
+import sense
+network_contact_info = sense.network_info()
 ```
 
+Returns the current dashboard's contact information 
+in a dict with keys `public_dns`, `public_port_mapping`, `ssh_password` and 
+`project_ip`. The public port mapping is a dict whose  keys and values are integers.
 
 Every project has its own [virtual private network](http://en.wikipedia.org/wiki/Virtual_private_network). 
 The project IP address is on the project VPN and is only accessible to 
@@ -140,11 +143,17 @@ If required, you can ssh to dashboards using the public DNS hostname on port
 
 ### launch_workers
 
-Launches worker dashboards into the cluster. Usage: 
-
 ```python
-launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={})
+import sense
+worker_info = sense.launch_workers(n, 
+    size="small", 
+    engine="sense-ipython-engine", 
+    startup_script="", 
+    startup_code="", 
+    env={})
 ```    
+
+Launches worker dashboards into the cluster. 
 
 In Sense, a cluster is a group of dashboards with the same master dashboard.  
 Worker dashboards multiplex their outputs to the master and are cleaned up
@@ -173,10 +182,9 @@ The full format is documented [here.](http://help.senseplatform.com/api/rest#ret
 
 ### list_workers
 
-Usage: 
-
 ```python
-list_workers()
+import sense
+worker_info = sense.list_workers()
 ```
 
 Returns information on the worker dashboards in the cluster in a 
@@ -184,36 +192,40 @@ list of dicts like those returned by launch_workers.
 
 ### get_master
 
-Returns information on the cluster's master dashboard in a dict like the ones returned by launch_workers. Usage: 
-
 ```python
-get_master()
+import sense
+master_info = sense.get_master()
 ```
+
+Returns information on the cluster's master dashboard in a dict like the ones returned by launch_workers.
 
 ### stop_workers
 
-Stops worker dashboards. Usage: 
-
 ```python
+import sense
+
 # To stop specific workers:
-stop_workers(id1, id2, ...)
+worker_info = sense.stop_workers(id1, id2, ...)
 
 # To stop all workers in the cluster:
-stop_workers()
+worker_info = sense.stop_workers()
 ```
+
+Stops worker dashboards.
 
 Dashboards' numerical IDs are available at key `"id"` in the dicts returned by 
 list_workers and launch_workers. The return value is a dict of the same type.
 
 ### get_auth
 
-Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest). Usage: 
-
 ```python
-get_auth()
+import sense
+basic_auth_credentials = sense.get_auth()
 ```
 
-Sense has a powerful REST API that gives you complete programmatic 
+Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest).
+
+Sense's powerful REST API gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
 [Basic Authentication](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication).
 The get_auth() function  returns the basic auth information as a dict 
