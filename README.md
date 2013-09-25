@@ -135,11 +135,11 @@ the current dashboard can be contacted from outside the project. The public
 port mapping is a dict whose  keys and values are integers. Only ports 
 that are keys of the public port mapping can be accessed via the public DNS 
 hostname.  If you run a service on port 3000, for example, it  can be accessed 
-from anywhere on the internet on the public DNS hostname on port 
+from anywhere on the internet on the public DNS hostname and port 
 `public_port_mapping[3000]`.
 
-If required, you can SSH to dashboards using the public DNS hostname on port
-`public_port_mapping[22]` with username 'sense' and the SSH password.
+If required, you can SSH to dashboards using the public DNS hostname and port
+`public_port_mapping[22]` with username `"sense"` and the SSH password.
 
 ### launch_workers
 
@@ -218,7 +218,8 @@ worker_info = sense.stop_workers()
 
 ### get_auth
 
-Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest).
+Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest)
+as a dict with keys `"user"` and `"password"`.
 
 ```python
 import sense
@@ -228,9 +229,8 @@ basic_auth_credentials = sense.get_auth()
 Sense's powerful REST API gives you complete programmatic 
 control over virtually every aspect of Sense. Most REST calls require 
 [Basic Authentication](http://docs.python-requests.org/en/latest/user/authentication/#basic-authentication).
-The get_auth() function  returns the basic auth information as a dict 
-with keys `"user"` and `"password"`. To make authenticated REST calls, supply 
-this information your HTTP client of choice, such as the 
+ To make authenticated REST calls, supply 
+the information returned by get_auth your HTTP client of choice, such as the 
 Python [requests](http://docs.python-requests.org/) package. 
 
 By default get_auth uses the environment variable SENSE_API_TOKEN for
@@ -261,9 +261,8 @@ across all engines, and are documented [here](https://docs.senseplatform.com/get
 IPython provides its own [rich display system](http://nbviewer.ipython.org/urls/raw.github.com/ipython/ipython/1.x/examples/notebooks/Part%205%20-%20Rich%20Display%20System.ipynb), 
 so unlike its [R](http://github.com/SensePlatform/sense-r-module) 
 and [JavaScript](http://github.com/SensePlatform/sense-js-module) 
-counterparts this package does not provide any rich output functions. Just use IPython's rich 
-display system to display HTML, images and more
-in a dashboard.
+counterparts this package does not provide any rich output functions. 
+Use IPython's rich display system to display HTML, images and more in a dashboard.
 
 # Support
 
