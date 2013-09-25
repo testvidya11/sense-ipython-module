@@ -139,7 +139,7 @@ from anywhere on the internet on the public DNS hostname and port
 `public_port_mapping[3000]`.
 
 If required, you can SSH to dashboards using the public DNS hostname and port
-`public_port_mapping[22]` with username `"sense"` and the SSH password.
+`public_port_mapping[22]` with username "sense" and the SSH password.
 
 ### launch_workers
 
@@ -177,7 +177,7 @@ The parameters are:
   to send a master's contact information information to workers.
 
 The return value is a list of dicts. Each dict describes one of the workers
-that was launched and contains keys such as `id`, `engine`, `status`, etc. 
+that was launched and contains keys such as "id", "engine", "status", etc. 
 The full format is documented [here.](http://help.senseplatform.com/api/rest#retrieve-dashboard)
 
 ### list_workers
@@ -203,7 +203,7 @@ master_info = sense.get_master()
 
 Stops worker dashboards.
 
-Dashboards' numerical IDs are available at key `"id"` in the dicts returned by 
+Dashboards' numerical IDs are available at key "id" in the dicts returned by 
 list_workers and launch_workers. The return value is a dict of the same type.
 
 ```python
@@ -219,7 +219,7 @@ worker_info = sense.stop_workers()
 ### get_auth
 
 Returns authentication information for the [REST API](https://help.senseplatform.com/api/rest)
-as a dict with keys `"user"` and `"password"`.
+as a dict with keys "user" and "password".
 
 ```python
 import sense
