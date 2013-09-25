@@ -11,13 +11,13 @@ higher-level approaches to cluster computing.
 
 This package is preinstalled on Sense. You can import it with
 
-```
+```python
 import sense
 ```
 
 To install it elsewhere use
 
-```
+```bash
 pip install sense
 ```
 
@@ -127,6 +127,7 @@ in a dict with keys `public_dns`, `public_port_mapping`, `ssh_password` and
 `project_ip`.
 
 ```python
+import sense
 network_info = sense.network_info()
 ```
 
@@ -152,6 +153,7 @@ If required, you can SSH to dashboards using the public DNS hostname and port
 Launches worker dashboards into the cluster. 
 
 ```python
+import sense
  worker_info = sense.launch_workers(n, 
     size="small", 
     engine="sense-ipython-engine", 
@@ -191,6 +193,7 @@ Returns information on the worker dashboards in the cluster in a
 list of dicts like those returned by launch_workers.
 
 ```python
+import sense
 worker_info = sense.list_workers()
 ```
 
@@ -199,6 +202,7 @@ worker_info = sense.list_workers()
 Returns information on the cluster's master dashboard in a dict like the ones returned by launch_workers.
 
 ```python
+import sense
 master_info = sense.get_master()
 ```
 
