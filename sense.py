@@ -180,7 +180,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     responses = [pool.submit(launch_worker, i) for i in xrange(n)]
     return map(lambda x: x.result(), futures.wait(responses)[0])
 
-def get_workers():
+def list_workers():
     """Returns all information on all the workers in the current cluster.
 
     Returns
@@ -226,7 +226,7 @@ def stop_worker(*ids):
         A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
     """
     if len(ids) == 0:
-        ids = [worker["id"] for worker in get_workers()]
+        ids = [worker["id"] for worker in list_workers()]
         stop_workers(*ids)
     else:
         base_url = get_base_url();
