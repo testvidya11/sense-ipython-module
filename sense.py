@@ -1,7 +1,7 @@
 """
 .. module:: sense
    :platform: Ubuntu
-   :synopsis: Utility functions to help you get the most out of IPython on `Sense <https://senseplatform.com>`.
+   :synopsis: Utilities for IPython on `Sense <https://senseplatform.com>`.
 
 .. moduleauthor:: Anand Patil <anand@senseplatform.com>
 """
@@ -74,7 +74,7 @@ def get_auth():
     Returns
     -------
     dict
-        A dict with keys 'user' and 'pass'.
+        A dict with keys 'user' and 'password'.
 
     On Sense, this function will just work. If you use it locally, you'll
     need to set either SENSE_API_TOKEN or SENSE_USERNAME and SENSE_PASSWORD
