@@ -32,6 +32,8 @@ over the project's private network.
 import time
 import sense
 
+n_workers = 3
+
 # Use 'install' to install package 'pyzmq' from PyPI to the project.
 sense.install('pyzmq')
 import zmq
@@ -42,7 +44,7 @@ socket = context.socket(zmq.REP)
 
 # Use 'get_network_info' to find out the private IP address of the current
 # dashboard in the project's virtual private network.
-address = "tcp://" + sense.network_info().project_ip + ":5000"
+address = "tcp://" + sense.network_info()['project_ip'] + ":5000"
 socket.bind(address)
 
 # Define code the worker dashboards should execute on startup.
@@ -74,13 +76,13 @@ print "Received reply: ", message
 # code is sent to each, and the current dashboard's project IP address is
 # stored in each worker's environment as 'SERVER', so each worker will contact
 # the current dashboard.
-workers = sense.launch_workers(n=3, 
+workers = sense.launch_workers(n=n_workers, 
     size="small", 
     startup_code=worker_code, 
     env={"SERVER": address})
 
 # Listen for worker messages.
-for i in range(0, 3)
+for i in range(0, n_workers):
     #  Wait for next request from client
     message = socket.recv()
     print "Received request: ", message
