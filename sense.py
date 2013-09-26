@@ -11,6 +11,7 @@ import os
 import IPython
 import requests
 import futures
+import simplejson
 
 __all__ = ["install", "network_info", "get_auth",
            "launch_workers", "list_workers", "get_master", "stop_workers"]
