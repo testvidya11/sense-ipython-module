@@ -83,7 +83,7 @@ def get_auth():
     in the environment.
     """
     if ("SENSE_USERNAME" in os.environ) and ("SENSE_PASSWORD" in os.environ):
-        return {"user": os.environ["SENSE_USERNAME"], "password": os.environ["SENSE_PASSWORD"]}network_info
+        return {"user": os.environ["SENSE_USERNAME"], "password": os.environ["SENSE_PASSWORD"]}
     elif "SENSE_API_TOKEN" in os.environ:
         return {"user": os.environ["SENSE_API_TOKEN"], "password": ""}
     else:
