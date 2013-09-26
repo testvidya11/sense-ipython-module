@@ -213,7 +213,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     # The n launch requests are done concurrently in a thread pool for lower
     # latency.
     def launch_worker(i):
-        return requests.post(url, data=request_body, auth=(auth["user"], auth["password"])).json()
+        return requests.post(url, data=simplejson.dumps(request_body), auth=(auth["user"], auth["password"])).json()
     pool = futures.ThreadPoolExecutor(THREAD_POOL_SIZE)
     responses = [pool.submit(launch_worker, i) for i in xrange(n)]
     return map(lambda x: x.result(), futures.wait(responses)[0])
