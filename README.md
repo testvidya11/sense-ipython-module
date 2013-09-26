@@ -249,7 +249,7 @@ This example retrieves information about the current project:
 import sense
 import requests
 auth = sense.get_auth()
-url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] +
+url = "https://api.senseplatform.com/users/" + os.environ["SENSE_OWNER_ID"] + \
    "/projects/" + os.environ["SENSE_PROJECT_ID"]
 response = requests.get(url, auth=(auth["user"], auth["password"])).json()
 ```

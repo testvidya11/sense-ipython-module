@@ -13,7 +13,7 @@ import requests
 import futures
 
 __all__ = ["install", "network_info", "get_auth",
-           "launch_worker", "list_workers", "get_master", "stop_workers"]
+           "launch_workers", "list_workers", "get_master", "stop_workers"]
 
 
 THREAD_POOL_SIZE = 10
@@ -167,7 +167,7 @@ def get_master_id():
 
 
 def get_base_url():
-    return API_URL + "/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards/"
+    return API_URL + "/users/" + os.environ["SENSE_OWNER_ID"] + "/projects/" + os.environ["SENSE_PROJECT_ID"] + "/dashboards/"
 
 
 def launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={}):
@@ -258,7 +258,7 @@ def get_master():
     """
     master_id = get_master_id()
     auth = get_auth()
-    url = get_base_url() + master_id
+    url = get_base_url() + str(master_id)
     return requests.get(url, auth=(auth["user"], auth["password"])).json()
 
 
@@ -266,7 +266,7 @@ def stop_workers(*ids):
     """stop_workers
 
     Description
-    -----------
+    ----------
 
     Stops worker dashboards in the current cluster.
 
