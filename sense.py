@@ -35,16 +35,22 @@ def expand_cli_arguments(arg, value=None):
 def install(package_name, flags=[], arguments={}):
     """install
 
-    Installs the named package to the current project using `pip. <http://www.pip-installer.org/>`
+    Description
+    -----------
+
+    Installs the named package to the current project using `pip. <http://www.pip-installer.org/>`_
 
     Parameters
     ----------
     package_name: str 
-        The name of the `Python package <https://pypi.python.org/pypi>` to install.
+        The name of the `Python package <https://pypi.python.org/pypi>`_ to install.
     flags: list, optional
         Command line flags for pip.
     arguments: list, optional
         Command line agruments for pip.
+
+    Details
+    -------
 
     >>> sense.install("beautifulsoup")
 
@@ -76,12 +82,18 @@ def install(package_name, flags=[], arguments={}):
 def get_auth():
     """get_auth
 
-    Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`
+    Description
+    -----------
+
+    Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`_
 
     Returns
     -------
     dict
         A dict with keys 'user' and 'password'.
+
+    Details
+    -------
 
     On Sense, this function will just work. If you use it locally, you'll
     need to set either SENSE_API_TOKEN or SENSE_USERNAME and SENSE_PASSWORD
@@ -99,6 +111,9 @@ def get_auth():
 def network_info():
     """network_info
 
+    Description
+    -----------
+
     Returns the current dashboard's networking information.
 
     Returns
@@ -107,6 +122,9 @@ def network_info():
         A dict with keys dns_public, public_port_mapping, ssh_password
         and project_ip. public_port_mapping is a dict whose keys and
         values are integers.
+
+    Details
+    -------
 
     The project IP address is only accessible to other dashboards in the
     same project. Any port can be accessed via the project IP address.
@@ -155,7 +173,11 @@ def get_base_url():
 def launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={}):
     """launch_workers
 
+    Description
+    -----------
+
     Launches worker dashboards into the current cluster.
+
     Parameters
     ----------
     n: int
@@ -163,7 +185,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     size: str, optional
         The dashboard size, for example "small", "medium" or "large".
     engine: str, optional
-        The name of the `npm <http://npmjs.org>` module to use as the engine.
+        The name of the `npm <http://npmjs.org>`_ module to use as the engine.
     startup_script: str, optional
         The name of a Python source file the dashboard should execute as soon as it starts up.
     startup_code: str, optional
@@ -174,7 +196,7 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
     Returns
     -------
     list
-        A list of dashboard dicts of the form described in the `REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
+        A list of dashboard dicts of the form described in the `REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`_
     """
 
     request_body = {
@@ -200,12 +222,15 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
 def list_workers():
     """list_workers
 
+    Description
+    -----------
+
     Returns all information on all the workers in the current cluster.
 
     Returns
     -------
     list
-        A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
+        A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`_
     """
     master_id = get_master_id()
     auth = get_auth()
@@ -221,12 +246,15 @@ def list_workers():
 def get_master():
     """get_master
 
+    Description
+    -----------
+
     Returns information on the current dashboard's master.
 
     Returns
     -------
     dict
-        A dict of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
+        A dict of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`_
     """
     master_id = get_master_id()
     auth = get_auth()
@@ -236,6 +264,9 @@ def get_master():
 
 def stop_workers(*ids):
     """stop_workers
+
+    Description
+    -----------
 
     Stops worker dashboards in the current cluster.
 
@@ -248,7 +279,7 @@ def stop_workers(*ids):
     Returns
     -------
     list
-        A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`
+        A list of dicts of the form described in `the REST API. <http://help.senseplatform.com/api/rest#retrieve-dashboard>`_
     """
     if len(ids) == 0:
         ids = [worker["id"] for worker in list_workers()]
