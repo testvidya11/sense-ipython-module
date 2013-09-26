@@ -16,7 +16,7 @@ __all__ = ["install", "network_info", "get_auth",
 
 
 THREAD_POOL_SIZE = 10
-API_URL = os.environ["SENSE_API_URL"] or "https://api.senseplatform.com"
+API_URL = os.environ.get("SENSE_API_URL", "https://api.senseplatform.com")
 
 
 def expand_cli_arguments(arg, value=None):
