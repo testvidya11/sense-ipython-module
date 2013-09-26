@@ -1,11 +1,12 @@
-"""
-.. module:: sense
-   :platform: Ubuntu
-   :synopsis: Utilities for IPython on `Sense <https://senseplatform.com>`.
+"""module sense
 
-.. moduleauthor:: Sense <support@senseplatform.com>
-"""
+Sense
+=====
 
+Utilities for IPython on Sense.
+
+Support: support@senseplatform.com
+"""
 import os
 import IPython
 import requests
@@ -32,7 +33,9 @@ def expand_cli_arguments(arg, value=None):
 
 
 def install(package_name, flags=[], arguments={}):
-    """Installs the named package to the current project using `pip. <http://www.pip-installer.org/>`
+    """install
+
+    Installs the named package to the current project using `pip. <http://www.pip-installer.org/>`
 
     Parameters
     ----------
@@ -71,7 +74,9 @@ def install(package_name, flags=[], arguments={}):
 
 
 def get_auth():
-    """Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`
+    """get_auth
+
+    Returns the username and password to use with the `Sense REST API. <https://help.senseplatform.com/api/rest>`
 
     Returns
     -------
@@ -92,7 +97,9 @@ def get_auth():
 
 
 def network_info():
-    """Returns the current dashboard's networking information.
+    """network_info
+
+    Returns the current dashboard's networking information.
 
     Returns
     -------
@@ -146,7 +153,9 @@ def get_base_url():
 
 
 def launch_workers(n, size="small", engine="sense-ipython-engine", startup_script="", startup_code="", env={}):
-    """Launches worker dashboards into the current cluster.
+    """launch_workers
+
+    Launches worker dashboards into the current cluster.
     Parameters
     ----------
     n: int
@@ -189,7 +198,9 @@ def launch_workers(n, size="small", engine="sense-ipython-engine", startup_scrip
 
 
 def list_workers():
-    """Returns all information on all the workers in the current cluster.
+    """list_workers
+
+    Returns all information on all the workers in the current cluster.
 
     Returns
     -------
@@ -208,7 +219,9 @@ def list_workers():
 
 
 def get_master():
-    """Returns information on the current dashboard's master.
+    """get_master
+
+    Returns information on the current dashboard's master.
 
     Returns
     -------
@@ -221,8 +234,10 @@ def get_master():
     return requests.get(url, auth=(auth["user"], auth["password"])).json()
 
 
-def stop_worker(*ids):
-    """Stops worker dashboards in the current cluster.
+def stop_workers(*ids):
+    """stop_workers
+
+    Stops worker dashboards in the current cluster.
 
     Parameters
     ----------
